@@ -1,43 +1,14 @@
 import { faTrash, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import WarningMessage from "./warningMessage"
-import { useState } from "react"
 import NoTaskToShow from '../../assets/NoTask.svg'
 
-const UserDeletedTask = ({taskListDeleted, restoreTaskById, restoreAllTask, deleteTaskById, deleteAllTask}) => {
-  const [showWarningMessage, setShowWarningMessage] = useState('hidden')
-  const [taskIdToDelete, setTaskIdToDelete] = useState(null);
-  
-  // Show the warning message
-  const handleShowWarningMessage = () => {
-    setShowWarningMessage(showWarningMessage === 'hidden' && 'block' )
-  }
-
-  // Hide the warning message
-  const handleHideWarningMessage = () => {
-    setShowWarningMessage(showWarningMessage === 'block' && 'hidden' )
-  }
-
-  // onclick it will set the id that user want to permanently delete (one task will be delete) then show the warning message
-  const handleDeleteTask = (taskId) => {
-    setTaskIdToDelete(taskId)
-    handleShowWarningMessage()
-  }
+const UserDeletedTask = ({taskListDeleted, restoreTaskById, deleteTaskById, deleteAllTask, showWarningMessage, handleHideWarningMessage, handleDeleteTask, taskIdToDelete, setTaskIdToDelete }) => {
 
   return (
     <>
-    <WarningMessage showWarningMessage={showWarningMessage}handleHideWarningMessage={handleHideWarningMessage} deleteAllTask={deleteAllTask} deleteTaskById={deleteTaskById} taskIdToDelete={taskIdToDelete} setTaskIdToDelete={setTaskIdToDelete} />
+      <WarningMessage showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} deleteAllTask={deleteAllTask} deleteTaskById={deleteTaskById} taskIdToDelete={taskIdToDelete} setTaskIdToDelete={setTaskIdToDelete} />
       <div className="bg-bg-input mt-4 p-4 rounded-md"> {/* Jan added mt-4 */}
-        {taskListDeleted.length !== 0 && (
-          <div className="flex justify-end mb-5">
-            <button className="bg-green-600 py-2 px-3 rounded-md mr-3 text-white" onClick={() => restoreAllTask()}>
-              Restore All
-            </button>
-            <button className="bg-red-600 py-2 px-3 rounded-md text-white" onClick={() =>handleShowWarningMessage()}>
-              Delete All
-            </button>
-          </div>
-        )}
         {taskListDeleted.length !== 0 ? (
           <>
             {taskListDeleted.map((taskDeleted) => (

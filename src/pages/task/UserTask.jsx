@@ -2,10 +2,10 @@ import React from 'react'
 import UserTaskInput from './UserTaskInput'
 import UserTaskList from './UserTaskList'
 
-const UserTask = ({ handleSubmit, taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, setTaskStart, setTaskEnd, setTaskBody, taskLists, handleCompleteTask, fetchTaskListCompleted, handleDeleteTask, fetchTaskListDeleted, fetchTaskListToEdit, setSelectedTaskIdToEdit, selectedTaskIdToEdit, handleCancelEdit  }) => {
+const UserTask = ({ handleSubmit, taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, setTaskStart, setTaskEnd, setTaskBody, taskLists, handleCompleteTask, fetchTaskListCompleted, handleDeleteTask, fetchTaskListDeleted, fetchTaskListToEdit, setSelectedTaskIdToEdit, selectedTaskIdToEdit, handleCancelEdit, createTaskToggle  }) => {
   return (
     <>
-      <form onSubmit={handleSubmit}  className='lg:ml-1 px-4 bg-bg-input rounded-md'>
+      <form onSubmit={handleSubmit}  className={`lg:ml-1 px-4 bg-bg-input rounded-md mx-2 sm:mx-0 ${createTaskToggle}`}>
         <UserTaskInput
           taskTitle={taskTitle}
           taskStart={taskStart}

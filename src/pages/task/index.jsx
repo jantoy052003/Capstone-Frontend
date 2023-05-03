@@ -5,6 +5,10 @@ import http from '../../lib/http'
 import Navbar from '../../components/navbar'
 import { useNavigate } from 'react-router-dom'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 const Tasks = () => {
   const navigate = useNavigate()
   const [token, setToken] = useState(localStorage.getItem('token'))
@@ -16,6 +20,46 @@ const Tasks = () => {
   const [taskListCompleted, setTaskListCompleted] = useState([]) //Jan added for completed task
   const [taskListDeleted, setTaskListDeleted] = useState([])
   const [selectedTaskIdToEdit, setSelectedTaskIdToEdit] = useState(null)
+
+  const [createTaskToggle, setCreateTaskToggle] = useState('hidden')
+  const [taskUpdate, setTaskUpdate] = useState([])
+
+    const notify = (message) => {
+      if (message === 'It is recommended to set a start and end date for the task') {
+        toast.info(message, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      } else if (message === 'Task has been moved to your archived.') {
+        toast.info(message, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      } else {
+        toast.success(message, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      }
+    }
 
   // Handling Add Task and Update Task
   const handleSubmitTask = async (e) => {
@@ -34,22 +78,24 @@ const Tasks = () => {
       }
 
       if (selectedTaskIdToEdit) {
-        await http.put(`/tasks/${selectedTaskIdToEdit}`, requestData, requestConfig)
+        const res = await http.put(`/tasks/${selectedTaskIdToEdit}`, requestData, requestConfig)
         setSelectedTaskIdToEdit(null)
+        if (taskUpdate.task_body !== taskBody || taskUpdate.task_title !== taskTitle || taskUpdate.task_start !== taskStart || taskUpdate.task_end !== taskEnd) {
+          notify(res.data.message)
+        } 
       } else {
-        await http.post('/tasks', requestData, requestConfig)
-        }
-
+        const res = await http.post('/tasks', requestData, requestConfig)
+        notify(res.data.message)
+      }
       setTaskTitle('')
       setTaskStart('')
       setTaskEnd('')
-      setTaskStart('')
       setTaskBody('')
       fetchTaskList()
 
     } catch (error) {
-        console.error(error)
-      }
+        alert(error.message)
+    }
   }
   
   // Calling all the user task and user deleted and user completed task on load
@@ -61,12 +107,17 @@ const Tasks = () => {
 
   // Fetching all User Task
   const fetchTaskList = async () => {
-    const res = await http.get('/task_list', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    setTaskList(res.data.tasks)
+    try {
+      const res = await http.get('/task_list', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setTaskList(res.data.tasks)
+
+    } catch (error) {
+      alert('An error occurred while fetching task list:', error)
+    }
   }
 
   //  Fetching all user completed task (Jan added)
@@ -81,28 +132,49 @@ const Tasks = () => {
 
   //  Fetching all user deleted task
   const fetchTaskListDeleted = async () => {
-    const res = await http.get('/task_deleted', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    setTaskListDeleted(res.data.deleted_task)
+    try {
+      const res = await http.get('/task_deleted', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setTaskListDeleted(res.data.deleted_task)
+
+    }  catch (error) {
+      alert('An error occurred while fetching deleted task list:', error)
+    }
   }
   
-  // handling user task(byId) to fill the form input
+  // handling user task(byId) to fill the form input if the value is null set it to empty string then create a copy of the fetchTaskListToEdit
   const fetchTaskListToEdit = async (taskId) => {
-    const res = await http.get(`/task_list/${taskId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    setTaskBody(res.data.task.task_body)
-    setTaskEnd(res.data.task.task_end)
-    setTaskStart(res.data.task.task_start)
-    setTaskTitle(res.data.task.task_title)
+    try {
+      const res = await http.get(`/task_list/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if  (res.data.task.task_start === null) {
+        setTaskStart('')
+      }
+      if (res.data.task.task_end === null) {
+        setTaskEnd('')
+      } else {
+        setTaskStart(res.data.task.task_start)
+        setTaskEnd(res.data.task.task_end)
+      }
+      if(createTaskToggle === 'hidden') {
+        handleToggleCreateTask()
+      }
+      setTaskBody(res.data.task.task_body)
+      setTaskTitle(res.data.task.task_title)
+      setTaskUpdate(res.data.task)
+
+    } catch (error) {
+      alert(`An error occurred while fetching task ${taskId} for editing:`, error)
+    }
   }
 
-  // reset the form to and set the selectedtaskid to null
+  // Reset the form to and set the selectedTaskIdToEdit to null
   const handleCancelEdit = () => {
     setSelectedTaskIdToEdit(null)
     setTaskTitle('')
@@ -126,31 +198,46 @@ const Tasks = () => {
 
   // Handling user delete task
   const handleDeleteTask = async (taskId) => {
-    await http.delete(`/task/${taskId}`, {
-      headers: {
-         Authorization: `Bearer ${token}`,
-      },
-    })
-    fetchTaskList()
-    fetchTaskListCompleted()
-    fetchTaskListDeleted()
+    try {
+      const res = await http.delete(`/task/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      notify(res.data.message)
+      fetchTaskList()
+      fetchTaskListDeleted()
+
+    } catch (error) {
+      alert(`An error occurred while deleting task ${taskId}:`, error)
+    }
   }
 
   // Handling user logout
   const logout = async () => {
-    await http.post('/logout', null, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-  })
-    localStorage.removeItem('token')
-    setToken('')
-    navigate('/login')
+    try {
+      await http.post('/logout', null, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      localStorage.removeItem('token')
+      setToken('')
+      navigate('/login')
+    } catch (error) {
+      alert('An error occurred while logging out:', error)
+    }
+  }
+
+  // toggle the form input
+  const handleToggleCreateTask = () => {
+    setCreateTaskToggle(createTaskToggle === 'hidden' ? 'block' : 'hidden')
   }
 
   return (
     <>
-      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
+      <ToastContainer />
+      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleToggleCreateTask={handleToggleCreateTask}/>
       <div className='container mx-auto h-screen flex'>
         <div className='hidden lg:block'>
           <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
@@ -176,6 +263,7 @@ const Tasks = () => {
               setSelectedTaskIdToEdit={setSelectedTaskIdToEdit}
               selectedTaskIdToEdit={selectedTaskIdToEdit}
               handleCancelEdit={handleCancelEdit}
+              createTaskToggle={createTaskToggle}
             />
           </div>
         </div>

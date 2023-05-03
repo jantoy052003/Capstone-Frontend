@@ -9,8 +9,9 @@ const UserTaskInput = ({ taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, 
             <label htmlFor="title">Title</label>
             <input
               id='title'
-              className='w-full px-4 py-3 rounded-md mt-2 bg-bg-focus '
+              className='w-full px-4 py-3 rounded-md mt-2 bg-bg-focus focus:outline-white focus:outline'
               type="text"
+              required
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               />
@@ -28,7 +29,7 @@ const UserTaskInput = ({ taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, 
             <div>
               <label htmlFor="task-end"  className='block'>Task End</label>
               <input
-                className='mt-2 py-3 uppercase bg-bg-focus rounded-md px-4 placeholder-shown:text-sm'
+                className='mt-2 py-3 uppercase bg-bg-focus rounded-md px-4 placeholder-shown:text-sm focus:outline-white focus:outline'
                 type="date"
                 value={taskEnd}
                 onChange={(e) => setTaskEnd(e.target.value)}
@@ -38,10 +39,11 @@ const UserTaskInput = ({ taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, 
        </div>
         <div>
           <textarea
-            className='bg-bg-focus w-full px-4 py-3 rounded-md mt-4 max-h-32 min-h-[8rem] placeholder:text-white mb-2'
+            className='bg-bg-focus w-full px-4 py-3 rounded-md mt-4 max-h-32 min-h-[8rem] placeholder:text-white mb-2 focus:outline-white focus:outline'
             id="task-body"
             cols="30"
             rows="10"
+            required
             placeholder='Description'
             value={taskBody}
             onChange={(e) => setTaskBody(e.target.value)}
