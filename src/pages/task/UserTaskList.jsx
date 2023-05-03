@@ -7,7 +7,7 @@ const UserTaskList = ({ taskLists, handleCompleteTask, fetchTaskListCompleted, h
     <div className='py-4 text-white'>
       <h1 className='mb-4'>TaskList</h1>
       {taskLists.length === 0 ? (
-        <div className='flex justify-center items-center h-72 md:h-96 lg:h-[24.5rem] xl:h-[20.5rem] 2xl:h-[33rem]'>
+        <div className='flex justify-center items-center h-[90vh]'>
           <div className='block md:flex md:items-center md:justify-center'>
             <h1 className='text-xl mb-5 mf:mb-0 md:mr-5 md:text-3xl font-medium'>No tasks to display</h1>
             <img src={NoTaskToShow} alt="no task image" className='w-48' />
