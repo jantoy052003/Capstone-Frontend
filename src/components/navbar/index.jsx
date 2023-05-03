@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { faBars, faBell, faLeaf, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import SideNav from './SideNav'
 
-const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskCompleted }) => {
+const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskCompleted, handleToggleCreateTask, handleShowWarningMessage, restoreAllTask, disable }) => {
   const [token, setToken] = useState(localStorage.getItem('token'))
   const [searchExpand, setSearchExpand] = useState('w-8')
   const [showSideNav, setShowSideNav] = useState('left-[-20rem]')
+
+  const location = useLocation();
+  const isActiveTask = location.pathname === '/tasks';
+  const isActiveDelete = location.pathname === '/deleted';
 
   const expand = () => {
     setSearchExpand(searchExpand === 'w-8' ? 'w-48' : 'w-8')
@@ -27,33 +31,28 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
       <div className='container mx-auto py-4 px-4 lg:px-0 flex justify-between items-center'>
         {token ? (
           <>
-            <div className='order-2 lg:hidden text-lg  flex items-center'>
-              <div className='bg-white py-1 px-2 rounded-md mr-2'>
-                <FontAwesomeIcon icon={faSearch} className='text-orange-600'/>
-              </div>
-              <div className='bg-white py-1 px-2 rounded-md mr-2'>
-                <FontAwesomeIcon icon={faBell} className='text-orange-600' />
-              </div>
-            </div>
             <div className='hidden lg:block'>
               <span className='text-2xl text-white font-bold tracking-wide flex items-center'>
                 <FontAwesomeIcon  icon={faLeaf} className='text-orange-600 mr-1 text-3xl'/>
                 MindfullTasks
               </span>
             </div>
-            <div className='hidden lg:block'>
-            <div className='flex'>
-              <form className={`bg-white py-1 px-2 rounded-md mr-2 relative flex items-center duration-300 transition-all ${searchExpand}`}>
-                <span className='absolute right-0 bg-white h-full flex items-center rounded-md cursor-pointer' onClick={expand}>
-                  <FontAwesomeIcon icon={faSearch} className='text-orange-600  bg-white px-2 '/>
-                </span>
-                <input type="text" className='w-full h-full text-navbar outline-none'/>
-              </form>
-              <div className='bg-white py-1 px-2 rounded-md'>
-                <FontAwesomeIcon icon={faBell} className='text-orange-600' />
-              </div>
-             </div>
-            </div>
+            {isActiveTask ?
+              <button className='bg-orange-600 px-4 py-2 rounded-md order-2 transition-all duration-300 hover:bg-orange-500' onClick={() => handleToggleCreateTask()}>
+                Create Task
+              </button> : ''
+            }
+            {isActiveDelete ? 
+            
+              <div className="flex justify-end order-2">
+                <button disabled={disable}  className="bg-green-600 py-2 px-3 rounded-md mr-3 text-white" onClick={() => restoreAllTask()}>
+                  Restore All
+                </button>
+                <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white" onClick={() =>handleShowWarningMessage()}>
+                  Delete All
+                </button>
+              </div> : '' 
+            }
           </>     
         ) : (
           <Link to='/' className='text-2xl text-white font-bold tracking-wide flex items-center'>
