@@ -16,11 +16,11 @@ const UserTaskInput = ({ taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, 
               onChange={(e) => setTaskTitle(e.target.value)}
               />
           </div>
-          <div className='grid grid-cols-2  mt-4 md:gap-10 md:mt-0'>
+          <div className='grid grid-cols-2 gap-4 mt-4 md:gap-10 md:mt-0'>
             <div>
               <label htmlFor="task-start" className='block'>Task Start</label>
               <input
-                className='mt-2 py-3 uppercase bg-bg-focus rounded-md px-4'
+                className='mt-2 w-full py-3 uppercase bg-bg-focus rounded-md px-4 focus:outline-white focus:outline'
                 type="date"
                 value={taskStart}
                 onChange={(e) => setTaskStart(e.target.value)}
@@ -29,7 +29,7 @@ const UserTaskInput = ({ taskTitle, taskStart, taskEnd, taskBody, setTaskTitle, 
             <div>
               <label htmlFor="task-end"  className='block'>Task End</label>
               <input
-                className='mt-2 py-3 uppercase bg-bg-focus rounded-md px-4 placeholder-shown:text-sm focus:outline-white focus:outline'
+                className='mt-2 w-full py-3 uppercase bg-bg-focus rounded-md px-4 placeholder-shown:text-sm focus:outline-white focus:outline'
                 type="date"
                 value={taskEnd}
                 onChange={(e) => setTaskEnd(e.target.value)}

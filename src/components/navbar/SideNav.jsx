@@ -26,9 +26,9 @@ const SideNav = ({ token, showSideNav, onCloseSideNav, numberOfTask, handleLogou
           <Logout handleLogout={handleLogout}/>
         </div>
       ) : (
-        <div className='mt-5'>
-          <Link to='/login' className='block py-2 mb-2 text-center bg-bg-100 rounded-md'>Login</Link>
-          <Link to='/signup' className='block py-2 text-center bg-bg-100 rounded-md'>Signup</Link>
+        <div className='mt-5 text-white text-center'>
+            <Link to='/login' className='block bg-bg-input mb-4 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>Login</Link>
+            <Link to='/signup'className='block bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>Start now</Link>
         </div>
       )}
     </div>

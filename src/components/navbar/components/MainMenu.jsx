@@ -8,7 +8,7 @@ const MainMenu = ({ numberOfTask }) => {
   
   return (
     <div className='main-menu mb-6 text-idle'>
-      <h1 className='mb-2 text-sm'>Main Menu</h1>
+      <h1 className='mb-2 text-sm font-light'>Main Menu</h1>
       <Link
         to='/tasks'
         className={`flex items-center bg-bg-input px-3 py-2 rounded-md mb-2 duration-300 transition-all hover:bg-orange-600 group ${isActiveTask ? 'bg-orange-600' : ''}`}
