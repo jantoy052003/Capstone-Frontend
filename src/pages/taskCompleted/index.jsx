@@ -20,7 +20,7 @@ const CompletedTask = () => {
   // Jan added
   const [showWarningMessage, setShowWarningMessage] = useState('hidden')
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
-  const disable = taskListDeleted.length === 0 ? true : false;
+  const disable = taskListCompleted.length === 0 ? true : false;
 
   const notify = (message) => {
     toast.success(message, {
