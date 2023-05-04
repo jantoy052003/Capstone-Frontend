@@ -12,6 +12,7 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
   const location = useLocation();
   const isActiveTask = location.pathname === '/tasks';
   const isActiveDelete = location.pathname === '/deleted';
+  const isActiveComplete = location.pathname === '/completed';//Jan added
 
   const expand = () => {
     setSearchExpand(searchExpand === 'w-8' ? 'w-48' : 'w-8')
@@ -42,8 +43,16 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
                 Create Task
               </button> : ''
             }
+            {/* Jan added */}
+            {isActiveComplete ?
+              <div className="flex justify-end order-2">
+              <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white" onClick={() =>handleShowWarningMessage()}>
+                Delete All
+              </button>
+            </div> : '' 
+            }
+            {/*------*/}
             {isActiveDelete ? 
-            
               <div className="flex justify-end order-2">
                 <button disabled={disable}  className="bg-green-600 py-2 px-3 rounded-md mr-3 text-white" onClick={() => restoreAllTask()}>
                   Restore All

@@ -186,14 +186,20 @@ const Tasks = () => {
 
   // Handling user complete task (Jan added)
   const handleCompleteTask = async (taskId) => {
-    await http.delete(`/task_complete/${taskId}`, { 
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    })
-    fetchTaskList()
-    fetchTaskListCompleted()
-    fetchTaskListDeleted()
+    try{
+      const res = await http.delete(`/task_complete/${taskId}`, { 
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      })
+      notify(res.data.message)
+      fetchTaskList()
+      fetchTaskListCompleted()
+      fetchTaskListDeleted()
+
+    } catch (error) {
+      alert(`An error occurred while completing task ${taskId}:`, error)
+    }
   }
 
   // Handling user delete task
@@ -243,7 +249,7 @@ const Tasks = () => {
           <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
         </div>
         <div className='w-full lg:flex lg:justify-end mt-14'>
-          <div className='lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2'>
+          <div className='lg:w-3/4 mt-1  xl:w-[77.3%] 2xl:w-[80.6%] py-2'> {/*na trigger OCD ko dito hehe*/}
             <UserTask
               taskLists={taskLists}
               handleSubmit={handleSubmitTask}

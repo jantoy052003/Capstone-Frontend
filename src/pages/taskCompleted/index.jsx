@@ -6,6 +6,9 @@ import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 import http from "../../lib/http"
 import { useNavigate } from 'react-router-dom'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const CompletedTask = () => {
 
   const navigate = useNavigate()
@@ -13,6 +16,24 @@ const CompletedTask = () => {
   const [taskLists, setTaskList] = useState([])
   const [taskListCompleted, setTaskListCompleted] = useState([])
   const [taskListDeleted, setTaskListDeleted] = useState([])  
+
+  // Jan added
+  const [showWarningMessage, setShowWarningMessage] = useState('hidden')
+  const [taskIdToDelete, setTaskIdToDelete] = useState(null);
+  const disable = taskListDeleted.length === 0 ? true : false;
+
+  const notify = (message) => {
+    toast.success(message, {
+      position: "top-center",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    })
+  }
 
   // call fetchTaskListDeleted, fetchTaskList and fetchTaskListCompleted on load
   useEffect(() => {
@@ -53,22 +74,34 @@ const CompletedTask = () => {
 
   // Delete task by id (Permanently delete one task) and call fetchTaskListDeleted  to update the deleted task list
   const deleteTaskById = async (taskId) => {
-    await http.delete(`/task_completed/${taskId}/complete`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    fetchTaskListCompleted()
+    try {
+      const res = await http.delete(`/task_completed/${taskId}/complete`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      notify(res.data.message)
+      fetchTaskListCompleted()
+
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
   // Delete all task and call fetchTaskListDeleted  to update the deleted task list
   const deleteAllTask = async () => {
-    await http.delete('/task_completed/complete_all', {
-      headers: {
-         Authorization: `Bearer ${token}`,
-      },
-    })
-    fetchTaskListCompleted()
+    try {
+      const res = await http.delete('/task_completed/complete_all', {
+        headers: {
+           Authorization: `Bearer ${token}`,
+        },
+      })
+      notify(res.data.message)
+      fetchTaskListCompleted()
+
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
    // Handling user logout
@@ -83,16 +116,34 @@ const CompletedTask = () => {
     navigate('/login')
   }
 
+  //Jan added
+  // Show the warning message
+  const handleShowWarningMessage = () => {
+    setShowWarningMessage(showWarningMessage === 'hidden' && 'block' )
+  }
+
+  // Hide the warning message
+  const handleHideWarningMessage = () => {
+    setShowWarningMessage(showWarningMessage === 'block' && 'hidden' )
+  }
+
+  // onclick it will set the id that user want to permanently delete (one task will be delete) then show the warning message
+  const handleDeleteTask = (taskId) => {
+    setTaskIdToDelete(taskId)
+    handleShowWarningMessage()
+  }
+
   return (
     <>
-      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
+      <ToastContainer />
+      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} handleShowWarningMessage={handleShowWarningMessage} numberOfTaskDeleted={taskListDeleted.length} disable={disable}/>
       <div className='container mx-auto h-screen flex'>
           <div className="hidden lg:block">
               <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
           </div>
           <div className="w-full lg:flex lg:justify-end mt-14">
               <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
-              <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask}/>
+              <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
               </div>
           </div>
       </div>
