@@ -11,7 +11,7 @@ import Home from './pages/home'
 const App = () => {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<Home />} exact />
       <Route path='/signup' element={<Signup />} />
       <Route path='/login' element={<Login />} />
       <Route path='/tasks' element={<Tasks />} />

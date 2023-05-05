@@ -13,6 +13,7 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
   const isActiveTask = location.pathname === '/tasks';
   const isActiveDelete = location.pathname === '/deleted';
   const isActiveComplete = location.pathname === '/completed';//Jan added
+  const isActiveHome = location.pathname === '/';
 
   const expand = () => {
     setSearchExpand(searchExpand === 'w-8' ? 'w-48' : 'w-8')
@@ -32,12 +33,12 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
       <div className='container mx-auto py-4 px-4 lg:px-0 flex justify-between items-center'>
         {token ? (
           <>
-            <div className='hidden lg:block'>
+            <Link to='/' className='hidden lg:block'>
               <span className='text-2xl text-white font-bold tracking-wide flex items-center'>
                 <FontAwesomeIcon  icon={faLeaf} className='text-orange-600 mr-1 text-3xl'/>
                 MindfullTasks
               </span>
-            </div>
+            </Link>
             {isActiveTask ?
               <button className='bg-orange-600 px-4 py-2 rounded-md order-2 transition-all duration-300 hover:bg-orange-500' onClick={() => handleToggleCreateTask()}>
                 Create Task
@@ -70,10 +71,12 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
           </Link>
         )}
         <FontAwesomeIcon icon={faBars} className='text-2xl lg:hidden order-1' onClick={handleSideNav} />
-        {token ? '' : (
+        {token ? (
+          isActiveHome ? <Link to='/tasks'className='bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>My Tasks</Link> : ''
+        ) : (
           <div className='hidden lg:block'>
-            <Link to='/login' className='mr-4 bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>Login</Link>
-            <Link to='/signup'className='bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>Signup</Link>
+            <Link to='/login' className='mr-4 px-4 py-3 rounded-md transition-all duration-300 hover:bg-orange-500'>Login</Link>
+            <Link to='/signup'className='bg-orange-600 px-4 py-3 rounded-md transition-all duration-300 hover:bg-orange-500'>Start now</Link>
           </div>
         )}
       </div>
