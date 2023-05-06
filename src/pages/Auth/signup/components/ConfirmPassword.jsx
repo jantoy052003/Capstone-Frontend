@@ -32,7 +32,7 @@ const ConfirmPassword = ({ value, onChange, password, onErrorChange }) => {
   return (
     <div className='mb-6 relative'>
       <input
-        className='w-full  px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-white'
+        className={`${confirmPasswordError ? 'outline-red-500 w-full px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-red-500' : 'w-full px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-white'}`}
         type='password'
         name='password_confirmation'
         placeholder='Password'

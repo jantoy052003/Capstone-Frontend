@@ -30,7 +30,7 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
   return (
     <nav className='bg-navbar text-white fixed top-0 left-0 right-0 z-50'>
       <SideNav token={token} showSideNav={showSideNav} onCloseSideNav={handleCloseSideNav} numberOfTask={numberOfTask} handleLogout={handleLogout} numberOfTaskDeleted={numberOfTaskDeleted} numberOfTaskCompleted={numberOfTaskCompleted}/>
-      <div className='container mx-auto py-4 px-4 lg:px-0 flex justify-between items-center'>
+      <div className='container mx-auto py-4 px-4 sm:px-0 flex justify-between items-center'>
         {token ? (
           <>
             <Link to='/' className='hidden lg:block'>
