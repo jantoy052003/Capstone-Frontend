@@ -72,7 +72,7 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
         )}
         <FontAwesomeIcon icon={faBars} className='text-2xl lg:hidden order-1' onClick={handleSideNav} />
         {token ? (
-          isActiveHome ? <Link to='/tasks'className='bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>My Tasks</Link> : ''
+          isActiveHome ? <Link to='/tasks'className='order-2 bg-orange-600 px-4 py-2 rounded-md transition-all duration-300 hover:bg-orange-500'>My Tasks</Link> : ''
         ) : (
           <div className='hidden lg:block'>
             <Link to='/login' className='mr-4 px-4 py-3 rounded-md transition-all duration-300 hover:bg-orange-500'>Login</Link>

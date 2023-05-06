@@ -9,20 +9,20 @@ const UserTaskList = ({ taskLists, handleCompleteTask, fetchTaskListCompleted, h
       <h1 className='text-xl font-medium mb-5'>Task Lists</h1>
       {taskLists.length === 0 ? (
         <div className='flex justify-center items-center h-[90vh]'>
-          <div className='block md:flex md:items-center md:justify-center'>
+          <div className='block text-center md:flex md:items-center md:justify-center'>
             <h1 className='text-xl mb-5 mf:mb-0 md:mr-5 md:text-3xl font-medium'>Click the button create task to create a new task</h1>
-            <img src={NoTaskToShow} alt="no task image" className='w-48' />
+            <img src={NoTaskToShow} alt="no task image" className='w-48 mx-auto' />
           </div>
         </div>
       ) : (
         <>
           <TaskInfo taskInfo={taskInfo} showTaskInfo={showTaskInfo} setShowTaskInfo={setShowTaskInfo} />
           {taskLists.map((taskList) =>  (
-            <div key={taskList.id} className='mb-6 p-3 bg-bg-focus rounded-md flex justify-between items-center'>
-              <p  className='cursor-pointer duration-200 transition-all hover:text-orange-300' onClick={() => getTaskInfo(taskList)}>
+            <div key={taskList.id} className='mb-6 bg-bg-focus rounded-md flex justify-between items-center'>
+              <p className='cursor-pointer duration-200 transition-all hover:text-orange-300 py-3 px-4 flex-1' onClick={() => getTaskInfo(taskList)}>
                 {taskList.task_title}
               </p>
-              <div className='flex items-center'>
+              <div className='flex items-center py-3 px-4'>
                 <div className='bg-green-600 px-2 py-1 mr-2 rounded-md cursor-pointer relative hover:bg-green-500 duration-300 transition-all group' onClick={() => {handleCompleteTask(taskList.id), fetchTaskListCompleted}}>
                   <FontAwesomeIcon icon={faCheck} />
                   <span className='absolute text-[12px] w-36 -top-[3rem] -left-[3rem] bg-body text-center py-2 rounded-md hidden duration-300 transition-all group-hover:block'>Mark as completed</span>
