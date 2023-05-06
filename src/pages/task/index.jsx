@@ -23,6 +23,8 @@ const Tasks = () => {
 
   const [createTaskToggle, setCreateTaskToggle] = useState('hidden')
   const [taskUpdate, setTaskUpdate] = useState([])
+  const [taskInfo, setTaskInfo] = useState(null)
+  const [showTaskInfo, setShowTaskInfo] = useState('hidden')
 
     const notify = (message) => {
       if (message === 'It is recommended to set a start and end date for the task') {
@@ -182,6 +184,7 @@ const Tasks = () => {
     setTaskEnd('')
     setTaskStart('')
     setTaskBody('')
+    setCreateTaskToggle(createTaskToggle === 'block' && 'hidden' )
   }
 
   // Handling user complete task (Jan added)
@@ -240,6 +243,11 @@ const Tasks = () => {
     setCreateTaskToggle(createTaskToggle === 'hidden' ? 'block' : 'hidden')
   }
 
+  // get the task info
+  const getTaskInfo = (task) => {
+    setTaskInfo(task);
+    setShowTaskInfo(showTaskInfo === 'hidden' && 'block')
+  };
   return (
     <>
       <header>
@@ -272,6 +280,10 @@ const Tasks = () => {
               selectedTaskIdToEdit={selectedTaskIdToEdit}
               handleCancelEdit={handleCancelEdit}
               createTaskToggle={createTaskToggle}
+              getTaskInfo={getTaskInfo}
+              taskInfo={taskInfo}
+              showTaskInfo={showTaskInfo}
+              setShowTaskInfo={setShowTaskInfo}
             />
           </div>
         </main>

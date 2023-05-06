@@ -1,8 +1,9 @@
 import { faCheck, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NoTaskToShow from '../../assets/NoTask.svg'
+import TaskInfo from './TaskInfo'
 
-const UserTaskList = ({ taskLists, handleCompleteTask, fetchTaskListCompleted, handleDeleteTask, fetchTaskListDeleted, fetchTaskListToEdit, setSelectedTaskIdToEdit }) => {
+const UserTaskList = ({ taskLists, handleCompleteTask, fetchTaskListCompleted, handleDeleteTask, fetchTaskListDeleted, fetchTaskListToEdit, setSelectedTaskIdToEdit, getTaskInfo, taskInfo, showTaskInfo, setShowTaskInfo }) => {
   return (
     <div className='py-4 text-white'>
       <h1 className='text-xl font-medium mb-5'>Task Lists</h1>
@@ -15,9 +16,10 @@ const UserTaskList = ({ taskLists, handleCompleteTask, fetchTaskListCompleted, h
         </div>
       ) : (
         <>
-          {taskLists.map((taskList) => (
+          <TaskInfo taskInfo={taskInfo} showTaskInfo={showTaskInfo} setShowTaskInfo={setShowTaskInfo} />
+          {taskLists.map((taskList) =>  (
             <div key={taskList.id} className='mb-6 p-3 bg-bg-focus rounded-md flex justify-between items-center'>
-              <p>
+              <p  className='cursor-pointer duration-200 transition-all hover:text-orange-300' onClick={() => getTaskInfo(taskList)}>
                 {taskList.task_title}
               </p>
               <div className='flex items-center'>
