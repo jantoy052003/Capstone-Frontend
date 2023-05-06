@@ -5,7 +5,7 @@ import { format } from "date-fns"
 const TaskInfo = ({taskInfo, showTaskInfo, setShowTaskInfo}) => {
   return (
     <div className={`bg-black bg-opacity-20 fixed left-0 right-0 h-screen top-0 flex justify-center items-center z-50 ${showTaskInfo}`}>
-      <div className="bg-navbar w-80 md:w-1/4 p-4 rounded-md text-white">
+      <div className="bg-navbar w-80 md:w-1/2 lg:w-1/4 p-4 rounded-md text-white">
         <h1 className="mb-3 text-xl font-medium text-blue-500">Task Info</h1>
       {taskInfo && (
         <div className="grid grid-rows-2 gap-5">
