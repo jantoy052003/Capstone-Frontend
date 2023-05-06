@@ -14,10 +14,12 @@ const DeletedTask = () => {
   const [taskLists, setTaskList] = useState([])
   const [taskListCompleted, setTaskListCompleted] = useState([])
   const [taskListDeleted, setTaskListDeleted] = useState([])
-  
   const [showWarningMessage, setShowWarningMessage] = useState('hidden')
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
   const disable = taskListDeleted.length === 0 ? true : false;
+
+  const [taskInfo, setTaskInfo] = useState(null)
+  const [showTaskInfo, setShowTaskInfo] = useState('hidden')
 
   const notify = (message) => {
     toast.success(message, {
@@ -172,7 +174,12 @@ const DeletedTask = () => {
       setTaskIdToDelete(taskId)
       handleShowWarningMessage()
     }
-  
+    
+  // get the task info
+  const getTaskInfo = (task) => {
+    setTaskInfo(task);
+    setShowTaskInfo(showTaskInfo === 'hidden' && 'block')
+  };
   return (
     <>
       <ToastContainer />
@@ -186,7 +193,7 @@ const DeletedTask = () => {
         </aside>
         <main className="w-full lg:flex lg:justify-end mt-14">
           <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
-            <UserDeletedTask taskListDeleted={taskListDeleted} restoreTaskById={restoreTaskById} restoreAllTask={restoreAllTask} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
+            <UserDeletedTask taskListDeleted={taskListDeleted} restoreTaskById={restoreTaskById} restoreAllTask={restoreAllTask} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete} setTaskIdToDelete={setTaskIdToDelete} getTaskInfo={getTaskInfo} taskInfo={taskInfo} showTaskInfo={showTaskInfo} setShowTaskInfo={setShowTaskInfo} />
           </div>
         </main>
       </div>

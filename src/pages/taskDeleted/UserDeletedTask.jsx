@@ -2,19 +2,23 @@ import { faTrash, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import WarningMessage from "./warningMessage"
 import NoTaskToShow from '../../assets/NoTask.svg'
+import TaskInfo from "../task/TaskInfo"
 
-const UserDeletedTask = ({taskListDeleted, restoreTaskById, deleteTaskById, deleteAllTask, showWarningMessage, handleHideWarningMessage, handleDeleteTask, taskIdToDelete, setTaskIdToDelete }) => {
+const UserDeletedTask = ({taskListDeleted, restoreTaskById, deleteTaskById, deleteAllTask, showWarningMessage, handleHideWarningMessage, handleDeleteTask, taskIdToDelete, setTaskIdToDelete, getTaskInfo, taskInfo, showTaskInfo, setShowTaskInfo}) => {
 
   return (
     <>
       <WarningMessage showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} deleteAllTask={deleteAllTask} deleteTaskById={deleteTaskById} taskIdToDelete={taskIdToDelete} setTaskIdToDelete={setTaskIdToDelete} />
+      <TaskInfo taskInfo={taskInfo} showTaskInfo={showTaskInfo} setShowTaskInfo={setShowTaskInfo}/>
       <div className="bg-bg-input mt-4 p-4 rounded-md mx-4 sm:mx-0"> {/* Jan added mt-4 */}
         {taskListDeleted.length !== 0 ? (
           <>
           <h1 className="text-xl text-white font-medium mb-5">Deleted Tasks</h1>
             {taskListDeleted.map((taskDeleted) => (
               <div key={taskDeleted.id} className="bg-bg-focus text-white mb-6 py-3 px-4 bg-bg-100 rounded-md flex justify-between items-center">
-                <p>{taskDeleted.task_title}</p>
+                <p className='cursor-pointer hover:text-orange-300' onClick={() => getTaskInfo(taskDeleted)}>
+                  {taskDeleted.task_title}
+                </p>
                 <div className="flex items-center">
                   <div className=" bg-green-600 px-2 py-1 mr-2 rounded-md cursor-pointer relative hover:bg-green-500 duration-300 transition-all group" onClick={() => restoreTaskById(taskDeleted.id)}>
                     <FontAwesomeIcon icon={faTrashArrowUp} />
