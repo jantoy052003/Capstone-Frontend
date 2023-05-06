@@ -176,16 +176,19 @@ const DeletedTask = () => {
   return (
     <>
       <ToastContainer />
-      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleShowWarningMessage={handleShowWarningMessage} restoreAllTask={restoreAllTask} taskListDeleted={taskListDeleted} disable={disable}/>
+      <header>
+        <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleShowWarningMessage={handleShowWarningMessage} restoreAllTask={restoreAllTask} taskListDeleted={taskListDeleted} disable={disable}/>
+      </header>
       <div className="container mx-auto h-screen flex">
-        <div className="hidden lg:block">
+        <ToastContainer />
+        <aside className="hidden lg:block">
           <SideNav token={token} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTask={taskLists.length} numberOfTaskDeleted={taskListDeleted.length}/>
-        </div>
-        <div className="w-full lg:flex lg:justify-end mt-14">
+        </aside>
+        <main className="w-full lg:flex lg:justify-end mt-14">
           <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
             <UserDeletedTask taskListDeleted={taskListDeleted} restoreTaskById={restoreTaskById} restoreAllTask={restoreAllTask} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
           </div>
-        </div>
+        </main>
       </div>
     </>
   )

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import Navbar from "../../components/navbar"
 import SideNav from "../../components/navbar/SideNav"
 import UserCompletedTask from "../taskCompleted/UserCompletedTask"
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 import http from "../../lib/http"
 import { useNavigate } from 'react-router-dom'
 
@@ -15,7 +14,7 @@ const CompletedTask = () => {
   const [token, setToken] = useState(localStorage.getItem('token'))
   const [taskLists, setTaskList] = useState([])
   const [taskListCompleted, setTaskListCompleted] = useState([])
-  const [taskListDeleted, setTaskListDeleted] = useState([])  
+  const [taskListDeleted, setTaskListDeleted] = useState([])
 
   // Jan added
   const [showWarningMessage, setShowWarningMessage] = useState('hidden')
@@ -135,17 +134,19 @@ const CompletedTask = () => {
 
   return (
     <>
-      <ToastContainer />
-      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} handleShowWarningMessage={handleShowWarningMessage} numberOfTaskDeleted={taskListDeleted.length} disable={disable}/>
+      <header>
+        <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} handleShowWarningMessage={handleShowWarningMessage} numberOfTaskDeleted={taskListDeleted.length} disable={disable}/>
+      </header>
       <div className='container mx-auto h-screen flex'>
-          <div className="hidden lg:block">
-              <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
+        <ToastContainer />
+        <aside className="hidden lg:block">
+            <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
+        </aside>
+        <main className="w-full lg:flex lg:justify-end mt-14">
+          <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
+            <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
           </div>
-          <div className="w-full lg:flex lg:justify-end mt-14">
-              <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
-              <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
-              </div>
-          </div>
+        </main>
       </div>
     </>
   )

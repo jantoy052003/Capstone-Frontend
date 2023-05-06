@@ -30,7 +30,7 @@ const Email = ({ value, onChange, existingEmailError, onErrorChange }) => {
   return (
     <div className='mb-6 relative'>
       <input
-        className='w-full  px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-white'
+        className={`${emailError ? 'outline-red-500 w-full px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-red-500' : 'w-full px-4 py-4 lg:py-5 rounded-lg bg-bg-input peer placeholder-transparent outline-none focus:outline focus:outline-white'}`}
         type='text'
         name='email'
         placeholder='Email address'

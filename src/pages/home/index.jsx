@@ -5,7 +5,9 @@ import heroImage from '../../assets/heroImage.png'
 const Home = () => {
   return (
     <>
-      <Navbar />
+      <header>
+        <Navbar />
+      </header>
       <main>
         <section className='container mx-auto text-white h-screen flex items-center relative px-4'>
           <div className='lg:w-4/6 xl:w-3/6 text-center mb-20 sm:text-left'>

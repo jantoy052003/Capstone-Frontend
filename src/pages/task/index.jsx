@@ -242,13 +242,15 @@ const Tasks = () => {
 
   return (
     <>
-      <ToastContainer />
-      <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleToggleCreateTask={handleToggleCreateTask}/>
+      <header>
+        <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleToggleCreateTask={handleToggleCreateTask}/>
+      </header>
       <div className='container mx-auto h-screen flex'>
-        <div className='hidden lg:block'>
+        <ToastContainer />
+        <aside className='hidden lg:block'>
           <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
-        </div>
-        <div className='w-full lg:flex lg:justify-end mt-14'>
+        </aside>
+        <main className='w-full lg:flex lg:justify-end mt-14'>
           <div className='lg:w-3/4 mt-1  xl:w-[77.3%] 2xl:w-[80.6%] py-2'> {/*na trigger OCD ko dito hehe*/}
             <UserTask
               taskLists={taskLists}
@@ -272,7 +274,7 @@ const Tasks = () => {
               createTaskToggle={createTaskToggle}
             />
           </div>
-        </div>
+        </main>
       </div>
     </>
   )
