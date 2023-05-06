@@ -15,11 +15,11 @@ const UserDeletedTask = ({taskListDeleted, restoreTaskById, deleteTaskById, dele
           <>
           <h1 className="text-xl text-white font-medium mb-5">Deleted Tasks</h1>
             {taskListDeleted.map((taskDeleted) => (
-              <div key={taskDeleted.id} className="bg-bg-focus text-white mb-6 py-3 px-4 bg-bg-100 rounded-md flex justify-between items-center">
-                <p className='cursor-pointer hover:text-orange-300' onClick={() => getTaskInfo(taskDeleted)}>
+              <div key={taskDeleted.id} className="bg-bg-focus text-white mb-6 bg-bg-100 rounded-md flex justify-between items-center">
+                <p className='cursor-pointer hover:text-orange-300 py-3 px-4 flex-1' onClick={() => getTaskInfo(taskDeleted)}>
                   {taskDeleted.task_title}
                 </p>
-                <div className="flex items-center">
+                <div className="flex items-center py-3 px-4">
                   <div className=" bg-green-600 px-2 py-1 mr-2 rounded-md cursor-pointer relative hover:bg-green-500 duration-300 transition-all group" onClick={() => restoreTaskById(taskDeleted.id)}>
                     <FontAwesomeIcon icon={faTrashArrowUp} />
                     <span className='absolute text-[12px] w-16 -top-[3rem] -left-[1rem] bg-body text-center py-2 rounded-md hidden duration-300 transition-all group-hover:block'>

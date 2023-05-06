@@ -6,7 +6,7 @@ import Tasks from './pages/task'
 import DeletedTask from './pages/taskDeleted'
 import CompletedTask from './pages/taskCompleted'
 import Home from './pages/home'
-
+import ProtectedRoute from './ProtectedRoute'
 
 const App = () => {
   return (
@@ -14,9 +14,11 @@ const App = () => {
       <Route path='/' element={<Home />} exact />
       <Route path='/signup' element={<Signup />} />
       <Route path='/login' element={<Login />} />
-      <Route path='/tasks' element={<Tasks />} />
-      <Route path='/deleted' element={<DeletedTask />} />
-      <Route path='/completed' element={<CompletedTask />} />
+      <Route element ={<ProtectedRoute />}>
+        <Route path='/tasks' element={<Tasks />} />
+        <Route path='/deleted' element={<DeletedTask />} />
+        <Route path='/completed' element={<CompletedTask />} />
+      </Route>
     </Routes>
   )
 }

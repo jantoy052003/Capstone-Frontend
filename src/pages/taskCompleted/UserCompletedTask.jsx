@@ -14,9 +14,9 @@ const UserCompletedTask = ({taskListCompleted, deleteTaskById, deleteAllTask, sh
           {taskListCompleted.length !== 0 ? (
             <>
               {taskListCompleted.map((taskDeleted) => (
-                <div key={taskDeleted.id} className="bg-bg-focus text-white mb-3 py-3 px-4 bg-bg-100 rounded-md flex justify-between items-center">
-                  <p>{taskDeleted.task_title}</p>
-                  <div className="w-44 md:w-96 md:grid md:grid-cols-3 md:gap-4 ">
+                <div key={taskDeleted.id} className="bg-bg-focus text-white mb-3 py-2 px-4 md:py-3 bg-bg-100 rounded-md flex justify-between items-center">
+                  <p className="flex-1 mr-3">{taskDeleted.task_title}</p>
+                  <div className="md:grid md:grid-cols-3 md:gap-6">
                     <div className="mb-3 md:mb-0 text-sm">
                       <span className="block text-orange-300 text-[12px] mb-1">
                         Task Start
