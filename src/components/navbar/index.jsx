@@ -47,7 +47,7 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
             {/* Jan added */}
             {isActiveComplete ?
               <div className="flex justify-end order-2">
-              <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white" onClick={() =>handleShowWarningMessage()}>
+              <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white transition-all duration-300 hover:bg-red-500" onClick={() =>handleShowWarningMessage()}>
                 Delete All
               </button>
             </div> : '' 
@@ -55,10 +55,10 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
             {/*------*/}
             {isActiveDelete ? 
               <div className="flex justify-end order-2">
-                <button disabled={disable}  className="bg-green-600 py-2 px-3 rounded-md mr-3 text-white" onClick={() => restoreAllTask()}>
+                <button disabled={disable}  className="bg-green-600 py-2 px-3 rounded-md mr-3 text-white transition-all duration-300 hover:bg-green-500" onClick={() => restoreAllTask()}>
                   Restore All
                 </button>
-                <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white" onClick={() =>handleShowWarningMessage()}>
+                <button disabled={disable} className="bg-red-600 py-2 px-3 rounded-md text-white transition-all duration-300 hover:bg-red-500" onClick={() =>handleShowWarningMessage()}>
                   Delete All
                 </button>
               </div> : '' 
