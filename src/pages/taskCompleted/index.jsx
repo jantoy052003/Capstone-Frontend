@@ -21,6 +21,9 @@ const CompletedTask = () => {
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
   const disable = taskListCompleted.length === 0 ? true : false;
 
+  const [taskInfo, setTaskInfo] = useState(null)
+  const [showTaskInfo, setShowTaskInfo] = useState('hidden')
+
   const notify = (message) => {
     toast.success(message, {
       position: "top-center",
@@ -132,6 +135,12 @@ const CompletedTask = () => {
     handleShowWarningMessage()
   }
 
+  // get the task info
+  const getTaskInfo = (task) => {
+    setTaskInfo(task);
+    setShowTaskInfo(showTaskInfo === 'hidden' && 'block')
+  };
+
   return (
     <>
       <header>
@@ -144,7 +153,7 @@ const CompletedTask = () => {
         </aside>
         <main className="w-full lg:flex lg:justify-end mt-14">
           <div className="lg:w-3/4 xl:w-[77%] 2xl:w-[80.6%] py-2">
-            <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete}/>
+            <UserCompletedTask taskListCompleted={taskListCompleted} deleteTaskById={deleteTaskById} deleteAllTask={deleteAllTask} showWarningMessage={showWarningMessage} handleHideWarningMessage={handleHideWarningMessage} handleDeleteTask={handleDeleteTask} taskIdToDelete={taskIdToDelete}  setTaskIdToDelete={setTaskIdToDelete} getTaskInfo={getTaskInfo} taskInfo={taskInfo} showTaskInfo={showTaskInfo} setShowTaskInfo={setShowTaskInfo} />
           </div>
         </main>
       </div>
