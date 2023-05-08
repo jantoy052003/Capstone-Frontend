@@ -47,6 +47,8 @@ const Signup = () => {
       })
 
         localStorage.setItem('token', res.data.token)
+        localStorage.setItem('id', res.data.user.id)
+        
         navigate('/tasks')
 
     } catch (error) {
