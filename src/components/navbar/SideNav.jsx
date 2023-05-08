@@ -31,7 +31,7 @@ const SideNav = ({ token, showSideNav, onCloseSideNav, numberOfTask, handleLogou
             <MainMenu numberOfTask={numberOfTask}/>
             <Archived numberOfTaskDeleted={numberOfTaskDeleted} numberOfTaskCompleted={numberOfTaskCompleted}/>
             <CommingSoon />
-            <Logout handleLogout={handleLogout}/>
+            <Logout handleLogout={handleLogout} token={token}/>
           </div>
           
         )

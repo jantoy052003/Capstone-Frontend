@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { format } from "date-fns"
-import WarningMessage from "../taskDeleted/warningMessage"
 import NoTaskToShow from '../../assets/NoTask.svg'
 import TaskInfo from "../task/TaskInfo"
+import WarningMessage from "../taskDeleted/WarningMessage"
 
 const UserCompletedTask = ({taskListCompleted, deleteTaskById, deleteAllTask, showWarningMessage, handleHideWarningMessage, handleDeleteTask, taskIdToDelete, setTaskIdToDelete, getTaskInfo, taskInfo, showTaskInfo, setShowTaskInfo}) => {
 

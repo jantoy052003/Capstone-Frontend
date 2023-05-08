@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { faBars, faBell, faLeaf, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, useLocation } from 'react-router-dom'
 import SideNav from './SideNav'
@@ -14,10 +14,6 @@ const Navbar = ({ numberOfTask, handleLogout, numberOfTaskDeleted, numberOfTaskC
   const isActiveDelete = location.pathname === '/deleted';
   const isActiveComplete = location.pathname === '/completed';//Jan added
   const isActiveHome = location.pathname === '/';
-
-  const expand = () => {
-    setSearchExpand(searchExpand === 'w-8' ? 'w-48' : 'w-8')
-  }
 
    const handleSideNav = () => {
     setShowSideNav(showSideNav === 'left-[-20rem]' && 'left-0')

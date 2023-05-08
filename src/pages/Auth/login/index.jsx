@@ -22,8 +22,9 @@ const Login = () => {
         password: password,
       });
 
-      localStorage.setItem('token', res.data.token);
-      navigate('/tasks');
+      localStorage.setItem('token', res.data.token)
+      localStorage.setItem('id', res.data.user.id)
+      navigate('/tasks')
 
     } catch (error) {
       if (error.response && error.response.status === 401) {

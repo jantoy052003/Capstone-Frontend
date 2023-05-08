@@ -1,5 +1,3 @@
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { format } from "date-fns"
 
 const TaskInfo = ({taskInfo, showTaskInfo, setShowTaskInfo}) => {
