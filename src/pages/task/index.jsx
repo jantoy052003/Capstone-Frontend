@@ -1,36 +1,56 @@
-import { useEffect, useState } from 'react'
-import SideNav from '../../components/navbar/SideNav'
-import UserTask from './UserTask'
-import http from '../../lib/http'
-import Navbar from '../../components/navbar'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from "react"
+import { useSidebar } from "../../hooks/useSideBar"
+import { useApiTasks } from "../../hooks/useApiTask"
+import { useGetTaskInfo } from "../../hooks/useGetTaskInfo"
+import Sidebar from "../../components/Sidebar"
+import Navbar from "../../components/Navbar"
+import MainMenu from "../../components/MainMenu"
+import Archived from "../../components/Archived"
+import CommingSoon from "../../components/CommingSoon"
+import Logout from "../../components/Logout"
+import UserTaskInput from "./UserTaskInput"
+import UserTaskList from "./UserTaskList"
+import api from "../../lib/api"
+import { useApiDeleteTask } from "../../hooks/useApiDeleteTask"
+import NoTaskToShow from "../../assets/NoTask.svg"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import Rolling from "../../assets/Rolling.svg"
+import { useToggleForm } from "../../hooks/useToggleForm"
+import { useFetchProfilePic } from "../../hooks/useFetchProfilePic"
+import { useNavigate } from "react-router-dom"
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
-const Tasks = () => {
-  const navigate = useNavigate()
-  const [token, setToken] = useState(localStorage.getItem('token'))
-  const [taskLists, setTaskList] = useState([])
-  const [taskTitle, setTaskTitle] = useState('')
-  const [taskBody, setTaskBody] = useState('')
-  const [taskStart, setTaskStart] = useState('')
-  const [taskEnd, setTaskEnd] = useState('')
-  const [taskListCompleted, setTaskListCompleted] = useState([]) //Jan added for completed task
-  const [taskListDeleted, setTaskListDeleted] = useState([])
+const Task = () => {
+  const [showSidebar, handleOpenSidebar, handleCloseSidebar] = useSidebar()
+  const [taskInfo, showTaskInfo, setShowTaskInfo, getTaskInfo] = useGetTaskInfo()
   const [selectedTaskIdToEdit, setSelectedTaskIdToEdit] = useState(null)
+  const [createTaskToggle, setCreateTaskToggle] = useState("hidden")
+  const [showForm, setShowForm, showUploadImageForm, hideUploadForm] = useToggleForm()
+  const [userId, setUserId] = useState(localStorage.getItem("id"))
+  const navigate = useNavigate()
 
-  const [createTaskToggle, setCreateTaskToggle] = useState('hidden')
-  const [taskUpdate, setTaskUpdate] = useState([])
-  const [taskInfo, setTaskInfo] = useState(null)
-  const [showTaskInfo, setShowTaskInfo] = useState('hidden')
+  // handling error
+  const apiError = (errorMsg) => {
+    const customId = "custom-id-yes"
+    const existingToast = toast.isActive(customId)
 
-    const notify = (message) => {
-      if (message === 'It is recommended to set a start and end date for the task') {
-        toast.info(message, {
+    if (existingToast) {
+      toast.update(existingToast, {
+        render: errorMsg,
+        type: toast.TYPE.ERROR,
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeButton: true,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+    } else {
+        toast.error(errorMsg, {
+          toastId: customId,
           position: "top-center",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -38,21 +58,58 @@ const Tasks = () => {
           progress: undefined,
           theme: "light",
         })
-      } else if (message === 'Task has been moved to your archived.') {
-        toast.info(message, {
+    }
+  }
+
+  // handling success
+  const apiSuccess = (successMsg) => {
+    const customId = "custom-id-yes"
+    const existingToast = toast.isActive(customId)
+
+    if (successMsg === "Task has been moved to your archived." || successMsg === "It is recommended to set a start and end date for the task") {
+      if (existingToast) {
+        toast.update(existingToast, {
+          render: successMsg,
+          type: toast.TYPE.INFO,
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeButton: true,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }) 
+      } else {
+        toast.info(successMsg, {
+          toastId: customId,
           position: "top-center",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      }
+    } else {
+      if (existingToast) {
+        toast.update(existingToast, {
+          render: successMsg,
+          type: toast.TYPE.SUCCESS,
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeButton: true,
+          closeOnClick: true,
           draggable: true,
           progress: undefined,
           theme: "light",
         })
       } else {
-        toast.success(message, {
+        toast.success(successMsg, {
+          toastId: customId,
           position: "top-center",
-          autoClose: 4000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -63,7 +120,22 @@ const Tasks = () => {
       }
     }
 
-  // Handling Add Task and Update Task
+  }
+  const [handleDeleteTask, handleCompleteTask, , , , ] = useApiDeleteTask(apiSuccess, apiError)
+  const [setToken, token, tasks, tasksCompleted, tasksDeleted, taskTitle, taskBody, taskStart,
+          taskEnd, taskUpdate, setTaskTitle, setTaskBody, setTaskStart, setTaskEnd,
+          fetchTasks, fetchTasksCompleted, fetchTasksDeleted, fetchTaskToEdit, isLoading
+        ] = useApiTasks(apiError)
+  const [profileUrl, fetchDefaultProfile] = useFetchProfilePic(apiError)
+    
+  useEffect(() => {
+    fetchTasks()
+    fetchTasksCompleted()
+    fetchTasksDeleted()
+    fetchDefaultProfile()
+  }, [])
+
+
   const handleSubmitTask = async (e) => {
     e.preventDefault()
     try {
@@ -80,216 +152,169 @@ const Tasks = () => {
       }
 
       if (selectedTaskIdToEdit) {
-        const res = await http.put(`/tasks/${selectedTaskIdToEdit}`, requestData, requestConfig)
+        const res = await api.put(`/tasks/${selectedTaskIdToEdit}`, requestData, requestConfig)
         setSelectedTaskIdToEdit(null)
         if (taskUpdate.task_body !== taskBody || taskUpdate.task_title !== taskTitle || taskUpdate.task_start !== taskStart || taskUpdate.task_end !== taskEnd) {
-          notify(res.data.message)
+          apiSuccess(res.data.message)
         } 
       } else {
-        const res = await http.post('/tasks', requestData, requestConfig)
-        notify(res.data.message)
+        const res = await api.post("/tasks", requestData, requestConfig)
+         apiSuccess(res.data.message)
       }
-      setTaskTitle('')
-      setTaskStart('')
-      setTaskEnd('')
-      setTaskBody('')
-      fetchTaskList()
-
+      setTaskTitle("")
+      setTaskStart("")
+      setTaskEnd("")
+      setTaskBody("")
+      fetchTasks()
+ 
     } catch (error) {
-        alert(error.message)
-    }
-  }
-  
-  // Calling all the user task and user deleted and user completed task on load
-  useEffect(() => {
-    fetchTaskList()
-    fetchTaskListCompleted() //Jan added
-    fetchTaskListDeleted()
-  }, [token])
-
-  // Fetching all User Task
-  const fetchTaskList = async () => {
-    try {
-      const res = await http.get('/task_list', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      setTaskList(res.data.tasks)
-
-    } catch (error) {
-      alert('An error occurred while fetching task list:', error)
-    }
-  }
-
-  //  Fetching all user completed task (Jan added)
-  const fetchTaskListCompleted = async () => {
-    const res = await http.get('/task_completed', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    setTaskListCompleted(res.data.completed_task)
-  }
-
-  //  Fetching all user deleted task
-  const fetchTaskListDeleted = async () => {
-    try {
-      const res = await http.get('/task_deleted', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      setTaskListDeleted(res.data.deleted_task)
-
-    }  catch (error) {
-      alert('An error occurred while fetching deleted task list:', error)
-    }
-  }
-  
-  // handling user task(byId) to fill the form input if the value is null set it to empty string then create a copy of the fetchTaskListToEdit
-  const fetchTaskListToEdit = async (taskId) => {
-    try {
-      const res = await http.get(`/task_list/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      if  (res.data.task.task_start === null) {
-        setTaskStart('')
-      }
-      if (res.data.task.task_end === null) {
-        setTaskEnd('')
-      } else {
-        setTaskStart(res.data.task.task_start)
-        setTaskEnd(res.data.task.task_end)
-      }
-      if(createTaskToggle === 'hidden') {
-        handleToggleCreateTask()
-      }
-      setTaskBody(res.data.task.task_body)
-      setTaskTitle(res.data.task.task_title)
-      setTaskUpdate(res.data.task)
-
-    } catch (error) {
-      alert(`An error occurred while fetching task ${taskId} for editing:`, error)
+        apiError(error.message)
     }
   }
 
   // Reset the form to and set the selectedTaskIdToEdit to null
   const handleCancelEdit = () => {
     setSelectedTaskIdToEdit(null)
-    setTaskTitle('')
-    setTaskStart('')
-    setTaskEnd('')
-    setTaskStart('')
-    setTaskBody('')
-    setCreateTaskToggle(createTaskToggle === 'block' && 'hidden' )
+    setTaskTitle("")
+    setTaskStart("")
+    setTaskEnd("")
+    setTaskStart("")
+    setTaskBody("")
+  }
+  
+  // toggle the form input
+  const handleToggleCreateTask = () => {
+    setCreateTaskToggle(createTaskToggle === "hidden" ? "block" : "hidden")
   }
 
-  // Handling user complete task (Jan added)
-  const handleCompleteTask = async (taskId) => {
-    try{
-      const res = await http.delete(`/task_complete/${taskId}`, { 
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      })
-      notify(res.data.message)
-      fetchTaskList()
-      fetchTaskListCompleted()
-      fetchTaskListDeleted()
+  const uploadProfileImage = async (e) => {
+    e.preventDefault()
+    const fileInput = e.target.elements.image
 
-    } catch (error) {
-      alert(`An error occurred while completing task ${taskId}:`, error)
+    if (!fileInput.value) {
+      apiError('Please select a file')
+      return
     }
-  }
 
-  // Handling user delete task
-  const handleDeleteTask = async (taskId) => {
+    const formData = new FormData()
+    formData.append('image', fileInput.files[0])
+
     try {
-      const res = await http.delete(`/task/${taskId}`, {
+      const res = await api.post(`/upload/${userId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       })
-      notify(res.data.message)
-      fetchTaskList()
-      fetchTaskListDeleted()
+      apiSuccess(res.data.message)
+      fetchDefaultProfile()
+      fileInput.value = ''
 
     } catch (error) {
-      alert(`An error occurred while deleting task ${taskId}:`, error)
+      apiError(error.message)
     }
   }
 
-  // Handling user logout
   const logout = async () => {
     try {
-      await http.post('/logout', null, {
+      await api.post('/logout', null, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       })
       localStorage.removeItem('token')
+      localStorage.removeItem('id')
       setToken('')
       navigate('/login')
+
     } catch (error) {
-      alert('An error occurred while logging out:', error)
+      apiError('An error occurred while logging out:', error)
     }
   }
 
-  // toggle the form input
-  const handleToggleCreateTask = () => {
-    setCreateTaskToggle(createTaskToggle === 'hidden' ? 'block' : 'hidden')
-  }
-
-  // get the task info
-  const getTaskInfo = (task) => {
-    setTaskInfo(task);
-    setShowTaskInfo(showTaskInfo === 'hidden' && 'block')
-  };
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
+      <Sidebar token={token} showSidebar={showSidebar} handleCloseSidebar={handleCloseSidebar} tasks={tasks.length} tasksCompleted={tasksCompleted.length} tasksDeleted={tasksDeleted.length} showForm={showForm} setShowForm={setShowForm} showUploadImageForm={showUploadImageForm} hideUploadForm={hideUploadForm} uploadProfileImage={uploadProfileImage} profileUrl={profileUrl} logout={logout}/>
       <header>
-        <Navbar numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length} handleToggleCreateTask={handleToggleCreateTask}/>
+        <Navbar token={token} handleOpenSidebar={handleOpenSidebar} handleToggleCreateTask={handleToggleCreateTask} />
       </header>
-      <div className='container mx-auto h-screen flex'>
-        <ToastContainer />
-        <aside className='hidden lg:block'>
-          <SideNav token={token} numberOfTask={taskLists.length} handleLogout={logout} numberOfTaskCompleted={taskListCompleted.length} numberOfTaskDeleted={taskListDeleted.length}/>
-        </aside>
-        <main className='w-full lg:flex lg:justify-end mt-14'>
-          <div className='lg:w-3/4 mt-1  xl:w-[77.3%] 2xl:w-[80.6%] py-2'> {/*na trigger OCD ko dito hehe*/}
-            <UserTask
-              taskLists={taskLists}
-              handleSubmit={handleSubmitTask}
-              taskTitle={taskTitle}
-              taskStart={taskStart}
-              taskEnd={taskEnd}
-              taskBody={taskBody}
-              setTaskTitle={setTaskTitle}
-              setTaskStart={setTaskStart}
-              setTaskEnd={setTaskEnd}
-              setTaskBody={setTaskBody}
-              handleCompleteTask={handleCompleteTask} //Jan added
-              fetchTaskListCompleted={fetchTaskListCompleted} //Jan added
-              handleDeleteTask={handleDeleteTask}
-              fetchTaskListDeleted={fetchTaskListDeleted}
-              fetchTaskListToEdit={fetchTaskListToEdit}
-              setSelectedTaskIdToEdit={setSelectedTaskIdToEdit}
-              selectedTaskIdToEdit={selectedTaskIdToEdit}
-              handleCancelEdit={handleCancelEdit}
-              createTaskToggle={createTaskToggle}
-              getTaskInfo={getTaskInfo}
-              taskInfo={taskInfo}
-              showTaskInfo={showTaskInfo}
-              setShowTaskInfo={setShowTaskInfo}
-            />
-          </div>
-        </main>
+      <div className="layout h-screen">
+        <div className="container mx-auto flex">
+          <aside className="w-1/4 lg:block hidden bg-body border-navbar border-r h-screen py-3 px-4">
+            <div className="flex flex-col justify-between h-[92%] mt-16 py-5">
+              <MainMenu tasks={tasks.length}/>
+              <Archived tasksCompleted={tasksCompleted.length} tasksDeleted={tasksDeleted.length} />
+              <CommingSoon />
+              <Logout logout={logout} uploadProfileImage={uploadProfileImage} showForm={showForm} setShowForm={setShowForm} showUploadImageForm={showUploadImageForm} hideUploadForm={hideUploadForm} profileUrl={profileUrl}/>
+            </div>
+          </aside>
+          <main className="w-full h-screen lg:flex-1 overflow-y-auto">
+            <div className={`mt-16 py-3 px-4 h-[90%] ${tasks.length === 0 && "py-5"}`}>
+              <section className={`add-task-form mb-4 ${createTaskToggle}`}>
+                <UserTaskInput
+                  handleSubmitTask={handleSubmitTask}
+                  taskTitle={taskTitle}
+                  setTaskTitle={setTaskTitle}
+                  taskBody={taskBody}
+                  setTaskBody={setTaskBody}
+                  taskStart={taskStart}
+                  setTaskStart={setTaskStart}
+                  taskEnd={taskEnd}
+                  setTaskEnd={setTaskEnd}
+                  selectedTaskIdToEdit={selectedTaskIdToEdit}
+                  handleCancelEdit={handleCancelEdit}
+                />
+              </section>
+              {isLoading ? (
+                <div  className={`h-full flex justify-center items-center ${createTaskToggle !== "hidden" && "h-fit mt-10"}`}>
+                  <img src={Rolling} alt="loading svg" className="w-9 " />
+                </div>
+              ) : (
+                tasks.length === 0 ? (
+                <section className={`h-full flex items-center justify-center bg-bg-input rounded-md ${createTaskToggle !== "hidden" && "h-2/5 md:h-[55%]  lg:h-[52%] xl:h-[51%] 2xl:h-[55%]" }`}>
+                   <div className="text-white text-center">
+                      <h1 className="text-xl mb-5 mf:mb-0 md:mr-5 md:text-3xl font-medium">Click the button create task to create a new task</h1>
+                      <img src={NoTaskToShow} alt="no task image" className="w-48 mx-auto" />
+                    </div>
+                </section>
+              ) : (
+                <section className="tasks-list">
+                  <UserTaskList
+                    taskLists={tasks}
+                    fetchTaskToEdit={fetchTaskToEdit}
+                    setSelectedTaskIdToEdit={setSelectedTaskIdToEdit}
+                    taskInfo={taskInfo}
+                    getTaskInfo={getTaskInfo}
+                    showTaskInfo={showTaskInfo}
+                    setShowTaskInfo={setShowTaskInfo}
+                    handleDeleteTask={handleDeleteTask}
+                    fetchTasksDeleted={fetchTasksDeleted}
+                    fetchTasks={fetchTasks}
+                    handleCompleteTask={handleCompleteTask}
+                    fetchTasksCompleted={fetchTasksCompleted}
+                    setCreateTaskToggle={setCreateTaskToggle}                   
+                  />
+                </section>
+              )
+              )}
+            </div>
+          </main>
+        </div>
       </div>
     </>
   )
 }
 
-export default Tasks
+export default Task
