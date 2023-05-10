@@ -19,3 +19,13 @@
 input[type="date"]::-webkit-calendar-picker-indicator {
   background-image: url(./assets/calendar.png);
 }
+
+main::-webkit-scrollbar {
+  display: block;
+  width: .4rem;
+}
+
+main::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: .4rem;
+}

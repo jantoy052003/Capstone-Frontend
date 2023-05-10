@@ -1,19 +1,24 @@
-import Navbar from '../../components/navbar'
-import { Link } from 'react-router-dom'
+import Navbar from '../../components/Navbar'
+import Sidebar from '../../components/Sidebar'
+import { useSidebar } from '../../hooks/useSideBar'
 import heroImage from '../../assets/heroImage.png'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
+  const [showSidebar, handleOpenSidebar, handleCloseSidebar] = useSidebar()
+
   return (
     <>
+      <Sidebar showSidebar={showSidebar} handleCloseSidebar={handleCloseSidebar}/>
       <header>
-        <Navbar />
+        <Navbar handleOpenSidebar={handleOpenSidebar} />
       </header>
       <main>
         <section className='container mx-auto text-white h-screen flex items-center relative px-4'>
           <div className='lg:w-4/6 xl:w-3/6 text-center mb-20 sm:text-left'>
             <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold mb-4'>Maximize Your Time and Focus with MindfullTasks</h1>
             <p className='text-lg mb-8'>Get more done with MindfullTasks, the task management app designed to help you stay organized and focused on what matters most.  It's completely free, try it now.</p>
-            <Link to='/signup' className='bg-orange-600 px-4 py-3 rounded-md duration-300 transition-all hover:bg-orange-500'>
+            <Link to='/signup' className='bg-orange-600 px-4 py-3 rounded-md duration-300 transition-all hover:bg-orange-700'>
               Start now
             </Link>
           </div>
