@@ -59,7 +59,7 @@ const Navbar = ({handleOpenSidebar, disable, handleShowWarningMessage, handleTog
         ) : (
           <div className="hidden lg:block">
             <Link to="/login" className="py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-600 mr-2">Login</Link>
-            <Link to="/signup" className="bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Signup</Link>
+            <Link to="/signup" className="bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Start now</Link>
           </div>
         )}
 

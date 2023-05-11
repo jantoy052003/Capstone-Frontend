@@ -57,19 +57,19 @@ const Sidebar = ({showSidebar, handleCloseSidebar, tasks, tasksCompleted, tasksD
           {isActiveHome && (
             <>
               <Link to="/login" className="block w-1/2 mx-auto text-center py-2 px-3 mt-3 rounded-md transition-all duration-300 hover:bg-orange-600 ">Login</Link>
-              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Signup</Link>
+              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Start now</Link>
             </>
           )}
           {isActiveSignup && (
             <>
               <Link to="/login" className="block w-1/2 mx-auto text-center py-2 px-3 mt-3 rounded-md transition-all duration-300 hover:bg-orange-600 ">Login</Link>
-              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Signup</Link>
+              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Start now</Link>
             </>
           )}
           {isActiveLogin && (
             <>
               <Link to="/login" className="block w-1/2 mx-auto text-center py-2 px-3 mt-3 rounded-md transition-all duration-300 hover:bg-orange-600 ">Login</Link>
-              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Signup</Link>
+              <Link to="/signup" className="block w-1/2 mx-auto text-center bg-orange-600 py-2 px-3 rounded-md transition-all duration-300 hover:bg-orange-700">Start now</Link>
             </>
           )}
         </>    
