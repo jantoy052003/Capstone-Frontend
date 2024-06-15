@@ -6,7 +6,7 @@ const api = axios.create({
   headers: {
     // 'Accept': 'application/json',
     // 'Content-Type': 'application/json'
-    'Access-Control-Allow-Origin':  'http://127.0.0.1:3000',
+    'Access-Control-Allow-Origin':  'postgres://capstone_laravel_api_t9ez_user:JCDpwDHDbyEqyDjnMwNu6plhIB20Y3I1@dpg-cpm48mdds78s738tj8t0-a/capstone_laravel_api_t9ez',
     'Access-Control-Allow-Methods': 'POST',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
   }
